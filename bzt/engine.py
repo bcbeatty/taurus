@@ -950,7 +950,7 @@ class ScenarioExecutor(EngineModule):
     THRPT = "throughput"
     EXEC = "execution"
     STEPS = "steps"
-    LOAD_FMT = namedtuple("LoadSpec", "concurrency throughput ramp_up hold iterations duration steps")
+    LOAD_FMT = namedtuple("LoadSpec", "concurrency throughput ramp_up hold iterations duration steps filter")
 
     def __init__(self):
         super(ScenarioExecutor, self).__init__()
@@ -1044,6 +1044,8 @@ class ScenarioExecutor(EngineModule):
         concurrency = self.execution[ScenarioExecutor.CONCURR].get(prov_type, 0)
 
         iterations = self.execution.get("iterations", None)
+        
+        filter = self.execution.get("filter", None)
 
         ramp_up = self.execution.get(ScenarioExecutor.RAMP_UP, None)
         steps = self.execution.get(ScenarioExecutor.STEPS, None)
@@ -1071,7 +1073,7 @@ class ScenarioExecutor(EngineModule):
             raise TaurusConfigError(msg)
 
         return self.LOAD_FMT(concurrency=concurrency, ramp_up=ramp_up, throughput=throughput, hold=hold,
-                             iterations=iterations, duration=duration, steps=steps)
+                             iterations=iterations, duration=duration, steps=steps, filter=filter)
 
     def get_resource_files(self):
         files_list = []

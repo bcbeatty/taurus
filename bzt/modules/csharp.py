@@ -59,7 +59,9 @@ class NUnitExecutor(SubprocessedExecutor, HavingInstallableTools):
             cmdline += ['--iterations', str(load.iterations)]
         if load.hold:
             cmdline += ['--duration', str(int(load.hold))]
-
+        if load.filter:
+            cmdline += ['--filter', str(load.filter)]
+            
         if not is_windows():
             self.env.add_path({"MONO_PATH": self.runner_dir})
 
