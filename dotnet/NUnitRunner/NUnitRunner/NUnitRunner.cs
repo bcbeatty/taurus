@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Reflection;
 using Mono.Options;
 using NUnit.Engine;
 
 
 namespace NUnitRunner
 {
-    public class Program
+    public class NUnitRunner
     {     
         public static void ShowHelp()
         {
@@ -38,8 +39,23 @@ namespace NUnitRunner
 			if (opts.shouldShowHelp)
 				ShowHelp();
 
-			if (opts.targetAssembly == null)
-				throw new Exception("Target test suite wasn't provided. Is your file actually NUnit test DLL?");
+            if (opts.targetAssembly == null)
+            {
+                throw new Exception("Target test suite wasn't provided. Is your file actually NUnit test DLL?");
+            }
+
+            var path = AppDomain.CurrentDomain.BaseDirectory + opts.targetAssembly.Replace("/", "\\");
+            try
+            {      
+                opts.targetAssembly = Assembly.LoadFile(path).Location;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Unable to load Assembly:{path}", e);
+
+            }
+     
+            
 
             if (opts.iterations == 0) opts.iterations = opts.durationLimit > 0 ? int.MaxValue : 1;
 
@@ -47,9 +63,9 @@ namespace NUnitRunner
             Console.WriteLine($"Hold for: {opts.durationLimit}");
             Console.WriteLine($"Report file: {opts.reportFile}");
             Console.WriteLine($"Target: {opts.targetAssembly}");
-            if (!string.IsNullOrEmpty(opts.testCaseFilter.Text))
+            if (!string.IsNullOrEmpty(opts.testCaseFilter?.Text))
             {
-                Console.WriteLine($"Test Case Filter: {opts.testCaseFilter}");
+                Console.WriteLine($"Test Case Filter: {opts.testCaseFilter?.Text}");
             }
 
             return opts;

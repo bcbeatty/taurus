@@ -4,13 +4,13 @@ using System;
 
 namespace NUnitRunner
 {
-    [TestFixture()]
+    [TestFixture]
     public class NUnitTestClass
     {
-        [Test()]
+        [Test]
         public void TestCase()
         {
-            NUnitRunner.Main(new [] { "--iterations", "1", "--target", "../../NUnitSelenium/SeleniumSuite/bin/Release/SeleniumSuite.dll"});
+            NUnitRunner.Main(new [] { "--iterations", "1", "--target", "../../../NunitSample/bin/Debug/NUnitSample.dll" });//"--filter", "<filter><cat>Reserve</cat></filter>"
         }
     }
 }
